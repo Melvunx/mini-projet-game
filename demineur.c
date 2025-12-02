@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "Affichage.h"
-#include "Grille.h"
+#include "Game.h"
 
 int main() {
   struct Difficulte d;

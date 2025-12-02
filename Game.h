@@ -43,6 +43,7 @@ struct Partie {
 
 
 struct Grille initialiser_case(struct Grille grille);
+
 // Initialisation de la difficulté
 struct Difficulte initialiser_difficulte();
 
