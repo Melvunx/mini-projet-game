@@ -70,21 +70,6 @@ struct Difficulte initialiser_difficulte()
   return d;
 }
 
-struct Grille generer_plateau(struct Grille g)
-{
-  for (int i = 0; i < g.diff.taille; i++)
-  {
-    for (int j = 0; j < g.diff.taille; j++)
-    {
-      g.plateau[i][j] = '#';
-    }
-  }
-
-  g = initialiser_case(g);
-
-  return g;
-}
-
 
 struct Grille initialiser_grille()
 {
@@ -93,7 +78,7 @@ struct Grille initialiser_grille()
   // Initialisation de la difficulté
   g.diff = initialiser_difficulte();
 
-  g = generer_plateau(g);
+  g = initialiser_case(g);
 
   return g;
 }

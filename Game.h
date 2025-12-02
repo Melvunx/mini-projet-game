@@ -30,7 +30,6 @@ struct Case {
 
 struct Grille {
   struct Difficulte diff;
-  char plateau[MAX_TAILLE][MAX_TAILLE]; // Base de la grille
   struct Case visible[MAX_CASE]; // Case visible par le joueur (1) case invisible pour le joueur (0)
   struct Case drapeaux[MAX_CASE]; // Drapeaux posés par le joueur
 };
@@ -41,18 +40,24 @@ struct Partie {
   int terminer;
 };
 
-
-struct Grille initialiser_case(struct Grille grille);
-
 // Initialisation de la difficulté
 struct Difficulte initialiser_difficulte();
+
+struct Grille initialiser_case(struct Grille grille);
 
 // Initialisation de la grille
 struct Grille initialiser_grille();
 
-struct Grille generer_plateau(struct Grille grille);
+struct Grille generer_bombe(struct Grille grille);
+
+// struct Grille generer_bonus(struct Grille grille);
+
+struct Case coordonne_case();
 
 struct Grille deminer_case(struct Grille grille, struct Case c);
+
+// incrémenter le score
+int deminer(struct Case c);
 
 void commencer_partie(struct Grille grille);
 
