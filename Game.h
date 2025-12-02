@@ -9,8 +9,12 @@
 
 // Constantes pour le jeu
 #define MAX_TAILLE 6
-#define BOMBE -1
+#define MAX_CASE 36
+#define BOMBE -2
+#define PROCHE -1 // Case a proximité d'une bombe
 #define VIDE 0
+#define BONUS 1
+
 struct Difficulte {
   int taille;
   char niveau[MAX_CHAR + 1]; // facile moyen difficile
@@ -18,11 +22,17 @@ struct Difficulte {
   int esquive; // Niveau d'esquive en % 
 };
 
+struct Case {
+  int x;
+  int y;
+  int val;
+};
+
 struct Grille {
   struct Difficulte diff;
-  int plateau[MAX_TAILLE][MAX_TAILLE]; // Base de la grille
-  int visible[MAX_TAILLE][MAX_TAILLE]; // Case visible par le joueur (1) case invisible pour le joueur (0)
-  int drapeaux[MAX_TAILLE][MAX_TAILLE]; // Drapeaux posés par le joueur
+  char plateau[MAX_TAILLE][MAX_TAILLE]; // Base de la grille
+  struct Case visible[MAX_CASE]; // Case visible par le joueur (1) case invisible pour le joueur (0)
+  struct Case drapeaux[MAX_CASE]; // Drapeaux posés par le joueur
 };
 
 struct Partie {
@@ -31,13 +41,19 @@ struct Partie {
   int terminer;
 };
 
+
+struct Grille initialiser_case(struct Grille grille);
 // Initialisation de la difficulté
 struct Difficulte initialiser_difficulte();
 
 // Initialisation de la grille
 struct Grille initialiser_grille();
 
+struct Grille generer_plateau(struct Grille grille);
 
-struct Grille initialiser_plateau(struct Grille grille, int taille);
+struct Grille deminer_case(struct Grille grille, struct Case c);
+
+void commencer_partie(struct Grille grille);
+
 
 #endif
