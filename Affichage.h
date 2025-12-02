@@ -1,7 +1,7 @@
 #ifndef _AFFICHAGE_
 #define _AFFICHAGE_
-#include "Grille.h"
+#include "Game.h"
 
-void afficher_grille(struct Grille g);
+void afficher_grille(struct Grille grille);
 
 #endif

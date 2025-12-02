@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "Grille.h"
+#include "Game.h"
 
 struct Grille initialiser_plateau(struct Grille g, int taille)
 {
@@ -21,17 +21,20 @@ struct Difficulte initialiser_difficulte()
   struct Difficulte d;
   int player_choice;
 
-  do
-  {
-    printf(
-      "**************************************************\n"
-      "Choisissez le niveau de difficulté\n"
-      "Niveau facile :%d\tNiveau moyen :%d\tNiveau difficile :%d\n",
-      DIFF_EASY, DIFF_MID, DIFF_HARD
-    );
+  printf(
+    "**************************************************\n"
+    "Choisissez le niveau de difficulté\n"
+    "\tNiveau facile :%d\tNiveau moyen :%d\tNiveau difficile :%d\n",
+    DIFF_EASY, DIFF_MID, DIFF_HARD
+  );
+
+  scanf("%d", &player_choice);
   
+  while (player_choice > 3 || player_choice < 0)
+  {
+    printf("Attention !\nVeuillez choisir un niveau de difficulté entre %d, %d et %d : ", DIFF_EASY, DIFF_MID, DIFF_HARD);
     scanf("%d", &player_choice);
-  } while (player_choice > 3 || player_choice < 0);
+  }
 
   switch (player_choice)
   {
@@ -67,9 +70,9 @@ struct Grille initialiser_grille()
   struct Grille g;
 
   // Initialisation de la difficulté
-  g.d = initialiser_difficulte();
+  g.diff = initialiser_difficulte();
 
-  g = initialiser_plateau(g, g.d.taille);
+  g = initialiser_plateau(g, g.diff.taille);
 
   return g;
 }
