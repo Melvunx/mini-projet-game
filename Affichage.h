@@ -10,6 +10,6 @@ void fin_partie(struct Partie partie);
 
 void afficher_recap(struct Partie partie);
 
-void afficher_val_cases(struct Case c);
+void afficher_val_cases(int val);
 
 #endif

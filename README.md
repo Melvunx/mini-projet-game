@@ -13,4 +13,4 @@ gcc demineur.c Grille.c Affichier.c -o demineur
 
 ## Windows
 
-if ($?) { gcc demineur.c Grille.c Affichage.c -o demineur } ; if ($?) { .\demineur }
+if ($?) { gcc demineur.c Game.c Affichage.c -o demineur } ; if ($?) { .\demineur }

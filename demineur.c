@@ -3,10 +3,7 @@
 #include "Game.h"
 
 int main() {
-  struct Difficulte d;
   struct Grille g;
-
-  d = initialiser_difficulte();
 
   g = initialiser_grille();
 
