@@ -1,7 +1,55 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "Game.h"
 #include "Affichage.h"
+
+
+struct Difficulte initialiser_difficulte()
+{
+  struct Difficulte d;
+  int player_choice;
+  
+  do
+  {
+    printf(
+      "**************************************************\n"
+      "Choisissez le niveau de difficulté\n"
+      "Niveau facile :%d\tNiveau moyen :%d\tNiveau difficile :%d\n",
+      DIFF_EASY, DIFF_MID, DIFF_HARD
+    );
+    
+    scanf("%d", &player_choice);
+  } while (player_choice > 3 || player_choice < 0);
+  
+  switch (player_choice)
+  {
+    case DIFF_EASY:
+    strcpy(d.niveau, "Facile");
+    d.taille = 4;
+    d.nb_bombe = 6;
+    break;
+    
+    case DIFF_MID:
+    strcpy(d.niveau, "Moyen");
+    d.taille = 5;
+    d.nb_bombe = 10;
+    break;
+    
+    case DIFF_HARD:
+    strcpy(d.niveau, "Difficle");
+    d.taille = 6;
+    d.nb_bombe = 14;
+    break;
+    
+    default:
+    strcpy(d.niveau, "facile");
+    d.nb_bombe = 6;
+    d.taille = 4;
+  }
+  
+  return d;
+}
 
 struct Grille initialiser_case(struct Grille g)
 {
@@ -24,64 +72,91 @@ struct Grille initialiser_case(struct Grille g)
   return g;
 }
 
-struct Difficulte initialiser_difficulte()
-{
-  struct Difficulte d;
-  int player_choice;
-
-  do
-  {
-    printf(
-      "**************************************************\n"
-      "Choisissez le niveau de difficulté\n"
-      "Niveau facile :%d\tNiveau moyen :%d\tNiveau difficile :%d\n",
-      DIFF_EASY, DIFF_MID, DIFF_HARD
-    );
-  
-    scanf("%d", &player_choice);
-  } while (player_choice > 3 || player_choice < 0);
-
-  switch (player_choice)
-  {
-  case DIFF_EASY:
-    strcpy(d.niveau, "Facile");
-    d.taille = 4;
-    d.nb_bombe = 6;
-    break;
-    
-    case DIFF_MID:
-    strcpy(d.niveau, "Moyen");
-    d.taille = 5;
-    d.nb_bombe = 10;
-    break;
-    
-    case DIFF_HARD:
-    strcpy(d.niveau, "Difficle");
-    d.taille = 6;
-    d.nb_bombe = 14;
-    break;
-  
-  default:
-    strcpy(d.niveau, "facile");
-    d.nb_bombe = 6;
-    d.taille = 4;
-  }
-
-  return d;
-}
-
-
 struct Grille initialiser_grille()
 {
   struct Grille g;
-
+  
   // Initialisation de la difficulté
   g.diff = initialiser_difficulte();
-
+  
   g = initialiser_case(g);
+  
+  return g;
+}
+
+struct Case generer_case(int taille)
+{
+  srand(time(NULL)); //Initialisation du rand
+
+  struct Case c = {.val = 0};
+  int x_aleatoire;
+  int y_aleatoire;
+
+  // Génération des coordonnées aléatoires
+  x_aleatoire = (rand() % taille) + 1;
+  y_aleatoire = (rand() % taille) + 1;
+
+  c.x = x_aleatoire;
+  c.y = y_aleatoire;
+
+  return c;
+}
+
+
+int rechercher_case(struct Grille g, struct Case c)
+{
+  int nbcase = g.diff.taille * g.diff.taille;
+  int i = 0, trouve = 0;
+
+  while (i != nbcase || !trouve)
+  {
+    if (g.visible[i].x == c.x && g.visible[i].y == c.y)
+      trouve = 1;
+    i++;
+  }
+  
+  if (!trouve) return -1;
+
+  return i;
+}
+
+
+struct Grille generer_bombe(struct Grille g)
+{
+  struct Case random_case;
+  int position, i = 0;
+
+  while(i != g.diff.taille)
+  {
+    random_case = generer_case(g.diff.taille);
+    position = rechercher_case(g, random_case);
+
+    if (position != -1 && (g.visible[position].val != BOMBE)) 
+      g.visible[position].val = BOMBE;
+      /* Si la position n'est pas trouvée ou que la val est déjà egale 
+      a BOMB on décrémente i pour toujours avoir le bon nombre de bombe  */
+    else i--; 
+    
+    i++;
+  }
 
   return g;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // void commencer_partie(struct Grille grille)
 // {
@@ -98,6 +173,4 @@ struct Grille initialiser_grille()
 //   } while (!p.terminer);
   
 //   fin_partie(p);
-
-
 // }
