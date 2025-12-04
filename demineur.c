@@ -13,6 +13,11 @@ int main() {
 
   g = generer_bombe(g);
 
+  printf("\n");
   afficher_grille(g);
+  printf("\n");
+
+  struct Case c = coordonnee_case(g.diff.taille);
+
   return 0;
 }

@@ -51,7 +51,7 @@ struct Difficulte initialiser_difficulte()
   return d;
 }
 
-struct Grille initialiser_case(struct Grille g)
+struct Grille initialiser_cases(struct Grille g)
 {
   int i = 0;
   
@@ -76,9 +76,9 @@ struct Grille initialiser_grille()
   // Initialisation de la difficulté
   g.diff = initialiser_difficulte();
   
-  g = initialiser_case(g);
+  g = initialiser_cases(g);
 
-  afficher_all_case(g);
+  // afficher_all_case(g);
   
   return g;
 }
@@ -96,15 +96,31 @@ struct Grille generer_bombe(struct Grille g)
     {
       g.visible[position].val = BOMBE;
       bombe_genereted++;
-      printf("Bombe placée à l'indice %2d (x:%d, y:%d)\n\n", 
-             position, g.visible[position].x, g.visible[position].y);
+      // printf("Bombe placée à l'indice %2d (x:%d, y:%d)\n\n", 
+      //        position, g.visible[position].x, g.visible[position].y);
     }
   }
 
-  afficher_all_case(g);
+  // afficher_all_case(g);
 
-  printf("Nombre de bombes placée : %d\n\n", bombe_genereted);
+  printf("Nombre de bombes placées : %d\n\n", bombe_genereted);
   return g;
+}
+
+struct Case coordonnee_case(int taille)
+{
+  struct Case case_joueur = {.val = 0};
+
+  do
+  {
+    printf("Saisissez les coordonnées d'une case du jeu entre 1 et %d\nExemple : x:2 y:1\t|", taille);
+    scanf("%d %d", &case_joueur.x, &case_joueur.y);
+  } while (case_joueur.x > taille || case_joueur.x < 1 || case_joueur.y > taille || case_joueur.y < 1);
+  
+  printf("Vous avez saisis les coordonnées ");
+  afficher_case(case_joueur);
+  
+  return case_joueur;
 }
 
 

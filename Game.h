@@ -43,7 +43,7 @@ struct Partie {
 // Initialisation de la difficulté
 struct Difficulte initialiser_difficulte();
 
-struct Grille initialiser_case(struct Grille grille);
+struct Grille initialiser_cases(struct Grille grille);
 
 // Initialisation de la grille
 struct Grille initialiser_grille();
@@ -52,14 +52,14 @@ struct Grille generer_bombe(struct Grille grille);
 
 // struct Grille generer_bonus(struct Grille grille);
 
-struct Case coordonne_case();
+struct Case coordonnee_case(int taille);
 
-struct Grille deminer_case(struct Grille grille, struct Case c);
+struct Partie deminer_case(struct Grille grille, struct Case c);
 
 // incrémenter le score
-int deminer(struct Case c);
+// int deminer(struct Case c);
 
-void commencer_partie(struct Grille grille);
+void commencer_partie(struct Partie partie);
 
 
 #endif

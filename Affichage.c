@@ -37,6 +37,11 @@ void afficher_grille(struct Grille g)
   }
 }
 
+void afficher_case(struct Case c)
+{
+  printf("(x:%d ; y:%d)\n", c.x, c.y);
+}
+
 void afficher_all_case(struct Grille g)
 {
   int nbcases = g.diff.taille * g.diff.taille;
