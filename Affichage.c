@@ -4,7 +4,20 @@
 
 // Faire un switch pour séparer les cas
 void afficher_val_cases(int val){
-  printf("%c", val == 0 ? '#' : '_');
+  switch (val)
+  {
+  case VIDE:
+    printf("#");
+    break;
+
+  case BOMBE:
+    printf("o");
+    break;
+
+  default:
+    printf("#");
+    break;
+  }
 }
 
 void afficher_grille(struct Grille g)

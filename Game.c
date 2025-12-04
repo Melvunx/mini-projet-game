@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
+#include <stdlib.h>
 #include "Game.h"
 #include "Affichage.h"
 
@@ -86,7 +86,6 @@ struct Grille initialiser_grille()
 
 struct Case generer_case(int taille)
 {
-  srand(time(NULL)); //Initialisation du rand
 
   struct Case c = {.val = 0};
   int x_aleatoire;
@@ -99,6 +98,8 @@ struct Case generer_case(int taille)
   c.x = x_aleatoire;
   c.y = y_aleatoire;
 
+  printf("x_aleatoire : %d y_aleatoire : %d\n", x_aleatoire, y_aleatoire);
+
   return c;
 }
 
@@ -108,11 +109,12 @@ int rechercher_case(struct Grille g, struct Case c)
   int nbcase = g.diff.taille * g.diff.taille;
   int i = 0, trouve = 0;
 
-  while (i != nbcase || !trouve)
+  while (i < nbcase && !trouve)
   {
-    if (g.visible[i].x == c.x && g.visible[i].y == c.y)
+    if (g.visible[i].x == c.x && g.visible[i].y == c.y) 
       trouve = 1;
-    i++;
+    
+    else i++;
   }
   
   if (!trouve) return -1;
@@ -120,36 +122,7 @@ int rechercher_case(struct Grille g, struct Case c)
   return i;
 }
 
-
-struct Grille generer_bombe(struct Grille g)
-{
-  struct Case random_case;
-  int position, i = 0;
-
-  while(i != g.diff.taille)
-  {
-    random_case = generer_case(g.diff.taille);
-    position = rechercher_case(g, random_case);
-
-    if (position != -1 && (g.visible[position].val != BOMBE)) 
-      g.visible[position].val = BOMBE;
-      /* Si la position n'est pas trouvée ou que la val est déjà egale 
-      a BOMB on décrémente i pour toujours avoir le bon nombre de bombe  */
-    else i--; 
-    
-    i++;
-  }
-
-  return g;
-}
-
-
-
-
-
-
-
-
+ 
 
 
 
