@@ -7,16 +7,13 @@
 int main() {
 
   srand(time(NULL)); //Initialisation du rand
-  struct Grille g;
+  char r;
+do
+{
+  r = commencer_partie();
+} while (r != 'n' || r != 'N');
 
-  g = initialiser_grille();
-
-  g = generer_bombe(g);
-
-  printf("\n");
-  afficher_grille(g);
-  printf("\n");
-
+  
 
   return 0;
 }

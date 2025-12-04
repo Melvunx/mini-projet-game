@@ -1,11 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "Affichage.h"
 #include "Game.h"
 
 // Faire un switch pour séparer les cas
 void afficher_val_cases(struct Case c){
   if (!c.visible) printf("#");
-  
+
   else {
     switch (c.val)
     {
@@ -54,5 +55,39 @@ void afficher_all_case(struct Grille g)
   {
     printf("Case n° = %2d | x:%d y:%d val:%2d |\n", 
       i + 1, g.plateau[i].x, g.plateau[i].y, g.plateau[i].val);
+  }
+}
+
+void afficher_deminage(int val){
+  char cases_vide[MAX_MESSAGE][TAILLE_MESSAGE] = {
+    "Ouf c'est une case vide !\n",
+    "Une case vide !\n",
+    "Yes !!\nUne case vide\n",
+    "Oh...\nUne case vide \n",
+    "Une\nCase\nVide\n"
+  };
+
+  char cases_bombe[MAX_MESSAGE][TAILLE_MESSAGE] = {
+    "Oh...\nUne bombe :'(\n",
+    "Une bombe...\n",
+    "Et c'est la bombe\n",
+    "Une bombe sauvage est apparu !\n",
+    "KABOOM !!!!\n"
+  };
+
+  // char cases_bonus[MAX_MESSAGE][TAILLE_MESSAGE] = {"\n", "\n", "\n", "\n", "\n"};
+
+    switch (val)
+  {
+  case VIDE:
+    printf("%s\n", cases_vide[rand() % MAX_MESSAGE]);
+    break;
+    
+    case BOMBE:
+    printf("%s\n", cases_bombe[rand() % MAX_MESSAGE]);
+    break;
+  
+  default:
+    break;
   }
 }

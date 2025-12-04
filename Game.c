@@ -78,10 +78,19 @@ struct Grille initialiser_grille()
   g.diff = initialiser_difficulte();
   
   g = initialiser_cases(g);
-
-  // afficher_all_case(g);
   
   return g;
+}
+
+int rechercher_case(struct Grille g, struct Case c)
+{
+  int nbcase = g.diff.taille * g.diff.taille;
+
+  for (int i = 0; i < nbcase; i++)
+  {
+    if (g.plateau[i].x == c.x && g.plateau[i].y == c.y) return i;
+  }
+  return -1;
 }
 
 struct Grille generer_bombe(struct Grille g)
@@ -97,8 +106,6 @@ struct Grille generer_bombe(struct Grille g)
     {
       g.plateau[position].val = BOMBE;
       bombe_genereted++;
-      // printf("Bombe placée à l'indice %2d (x:%d, y:%d)\n\n", 
-      //        position, g.plateau[position].x, g.plateau[position].y);
     }
   }
 
@@ -126,30 +133,47 @@ struct Case coordonnee_case(int taille)
 
 struct Partie deminer_case(struct Partie p)
 {
-  struct Case case_joueur = coordonnee_case(p.grille.diff.taille);
+  int taille = p.grille.diff.taille;
+  struct Case case_joueur = coordonnee_case(taille);
+  int position = rechercher_case(p.grille, case_joueur);
+  int case_vide = (taille * taille) - p.grille.diff.nb_bombe;
+
+  p.grille.plateau[position].visible = case_joueur.visible;
+
+  if (p.grille.plateau[position].val == VIDE) p.score++;
+  else p.terminer = 1;
+
+  if (p.score == case_vide) p.terminer = 1;
+
+  afficher_grille(p.grille);
+  afficher_deminage(p.grille.plateau[position].val);
 
   return p;
 }
 
+char commencer_partie()
+{
+  struct Partie p = {.score = 0, .terminer = 0};
+  char r; //Recommencer la partie ou non
 
+  p.grille = initialiser_grille(p.grille);
 
+  p.grille = generer_bombe(p.grille);
 
+  afficher_grille(p.grille);
 
-
-
-// void commencer_partie(struct Grille grille)
-// {
-//   struct Partie p = {.score = 0, .terminer = 0};
-//   char r; //Recommencer la partie ou non
-
-//   grille = initialiser_grille(grille);
-
-//   p.grille = grille;
-
-//   do
-//   {
-    
-//   } while (!p.terminer);
+  do
+  {
+    p = deminer_case(p);
+  } while (!p.terminer);
   
-//   fin_partie(p);
-// }
+  // fin_partie(p);
+
+  do
+  {
+    printf("Voulez-vous recommencer la partie ? (o|O pour oui, n|N pour non) :");
+    scanf("%c", &r);
+  } while (r != 'o' || r != 'O' || r != 'n' || r != 'N');
+
+  return r;
+}
