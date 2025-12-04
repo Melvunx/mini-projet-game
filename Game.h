@@ -13,7 +13,6 @@
 #define BOMBE -2
 #define PROCHE -1 // Case a proximité d'une bombe
 #define VIDE 0
-#define BONUS 1
 
 struct Difficulte {
   int taille;
@@ -26,12 +25,12 @@ struct Case {
   int x;
   int y;
   int val;
+  int visible; // 0 pour invisible et 1 pour visible
 };
 
 struct Grille {
   struct Difficulte diff;
-  struct Case visible[MAX_CASE]; // Case visible par le joueur (1) case invisible pour le joueur (0)
-  struct Case drapeaux[MAX_CASE]; // Drapeaux posés par le joueur
+  struct Case plateau[MAX_CASE]; 
 };
 
 struct Partie {
@@ -54,12 +53,12 @@ struct Grille generer_bombe(struct Grille grille);
 
 struct Case coordonnee_case(int taille);
 
-struct Partie deminer_case(struct Grille grille, struct Case c);
+struct Partie deminer_case(struct Partie partie);
 
 // incrémenter le score
 // int deminer(struct Case c);
 
-void commencer_partie(struct Partie partie);
+int commencer_partie(struct Partie partie);
 
 
 #endif

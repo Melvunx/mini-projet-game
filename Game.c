@@ -59,9 +59,10 @@ struct Grille initialiser_cases(struct Grille g)
   {
     for (int x = 1; x <= g.diff.taille; x++)
     {
-      g.visible[i].x = x;
-      g.visible[i].y = y;
-      g.visible[i].val = 0;
+      g.plateau[i].x = x;
+      g.plateau[i].y = y;
+      g.plateau[i].val = 0;
+      g.plateau[i].visible = 0;
       i++;
     }
   }
@@ -92,12 +93,12 @@ struct Grille generer_bombe(struct Grille g)
   {
     position = rand() % nbcase;
 
-     if (g.visible[position].val != BOMBE) 
+     if (g.plateau[position].val != BOMBE) 
     {
-      g.visible[position].val = BOMBE;
+      g.plateau[position].val = BOMBE;
       bombe_genereted++;
       // printf("Bombe placée à l'indice %2d (x:%d, y:%d)\n\n", 
-      //        position, g.visible[position].x, g.visible[position].y);
+      //        position, g.plateau[position].x, g.plateau[position].y);
     }
   }
 
@@ -109,7 +110,7 @@ struct Grille generer_bombe(struct Grille g)
 
 struct Case coordonnee_case(int taille)
 {
-  struct Case case_joueur = {.val = 0};
+  struct Case case_joueur = {.val = 0, .visible = 1};
 
   do
   {
@@ -123,6 +124,12 @@ struct Case coordonnee_case(int taille)
   return case_joueur;
 }
 
+struct Partie deminer_case(struct Partie p)
+{
+  struct Case case_joueur = coordonnee_case(p.grille.diff.taille);
+
+  return p;
+}
 
 
 

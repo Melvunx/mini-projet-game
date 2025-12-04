@@ -17,7 +17,6 @@ int main() {
   afficher_grille(g);
   printf("\n");
 
-  struct Case c = coordonnee_case(g.diff.taille);
 
   return 0;
 }

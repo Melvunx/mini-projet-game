@@ -3,22 +3,27 @@
 #include "Game.h"
 
 // Faire un switch pour séparer les cas
-void afficher_val_cases(int val){
-  switch (val)
-  {
-  case VIDE:
-    printf("#");
-    break;
+void afficher_val_cases(struct Case c){
+  if (!c.visible) printf("#");
+  
+  else {
+    switch (c.val)
+    {
+    case VIDE:
+      printf("□");
+      break;
 
-  case BOMBE:
-    printf("o");
-    break;
+    case BOMBE:
+      printf("o");
+      break;
 
-  default:
-    printf("#");
-    break;
+    default:
+      printf("#");
+      break;
+    }
   }
 }
+
 
 void afficher_grille(struct Grille g)
 {
@@ -27,9 +32,9 @@ void afficher_grille(struct Grille g)
   {
     for (int x = 1; x <= g.diff.taille; x++)
     {
-      if ((g.visible[i].y == y) && (g.visible[i].x == x))
+      if ((g.plateau[i].y == y) && (g.plateau[i].x == x))
       {
-        afficher_val_cases(g.visible[i].val);
+        afficher_val_cases(g.plateau[i]);
         i++;
       }
     }
@@ -48,6 +53,6 @@ void afficher_all_case(struct Grille g)
   for (int i = 0; i < nbcases; i++)
   {
     printf("Case n° = %2d | x:%d y:%d val:%2d |\n", 
-      i + 1, g.visible[i].x, g.visible[i].y, g.visible[i].val);
+      i + 1, g.plateau[i].x, g.plateau[i].y, g.plateau[i].val);
   }
 }
