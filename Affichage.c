@@ -22,14 +22,27 @@ void afficher_val_cases(int val){
 
 void afficher_grille(struct Grille g)
 {
-  for (int i = 0; i < g.diff.taille; i++)
+  int i = 0;
+  for (int y = 1; y <= g.diff.taille; y++)
   {
-
-    for (int j = 0; j < g.diff.taille; j++)
+    for (int x = 1; x <= g.diff.taille; x++)
     {
-      if ((g.visible[i].y == i + 1) || (g.visible[j].x == j + 1)) 
-      afficher_val_cases(g.visible[i + j].val);
+      if ((g.visible[i].y == y) && (g.visible[i].x == x))
+      {
+        afficher_val_cases(g.visible[i].val);
+        i++;
+      }
     }
     printf("\n");
+  }
+}
+
+void afficher_all_case(struct Grille g)
+{
+  int nbcases = g.diff.taille * g.diff.taille;
+  for (int i = 0; i < nbcases; i++)
+  {
+    printf("Case n° = %2d | x:%d y:%d val:%2d |\n", 
+      i + 1, g.visible[i].x, g.visible[i].y, g.visible[i].val);
   }
 }

@@ -12,4 +12,7 @@ void afficher_recap(struct Partie partie);
 
 void afficher_val_cases(int val);
 
+void afficher_all_case(struct Grille grille);
+
+
 #endif

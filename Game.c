@@ -53,19 +53,16 @@ struct Difficulte initialiser_difficulte()
 
 struct Grille initialiser_case(struct Grille g)
 {
-  int nbcase = g.diff.taille * g.diff.taille;
-
-  for (int i = 0; i < nbcase; i++)
+  int i = 0;
+  
+  for (int y = 1; y <= g.diff.taille; y++)
   {
-    g.visible[i].val = 0;
-  }
-
-  for (int j = 0; j < g.diff.taille; j++)
-  {
-    for (int k = 0; k < g.diff.taille; k++)
+    for (int x = 1; x <= g.diff.taille; x++)
     {
-      g.visible[k].y = j + 1;
-      g.visible[k].x = k + 1;
+      g.visible[i].x = x;
+      g.visible[i].y = y;
+      g.visible[i].val = 0;
+      i++;
     }
   }
   
@@ -80,49 +77,35 @@ struct Grille initialiser_grille()
   g.diff = initialiser_difficulte();
   
   g = initialiser_case(g);
+
+  afficher_all_case(g);
   
   return g;
 }
 
-struct Case generer_case(int taille)
-{
-
-  struct Case c = {.val = 0};
-  int x_aleatoire;
-  int y_aleatoire;
-
-  // Génération des coordonnées aléatoires
-  x_aleatoire = (rand() % taille) + 1;
-  y_aleatoire = (rand() % taille) + 1;
-
-  c.x = x_aleatoire;
-  c.y = y_aleatoire;
-
-  printf("x_aleatoire : %d y_aleatoire : %d\n", x_aleatoire, y_aleatoire);
-
-  return c;
-}
-
-
-int rechercher_case(struct Grille g, struct Case c)
+struct Grille generer_bombe(struct Grille g)
 {
   int nbcase = g.diff.taille * g.diff.taille;
-  int i = 0, trouve = 0;
+  int position, bombe_genereted = 0;
 
-  while (i < nbcase && !trouve)
+  while(bombe_genereted < g.diff.nb_bombe)
   {
-    if (g.visible[i].x == c.x && g.visible[i].y == c.y) 
-      trouve = 1;
-    
-    else i++;
+    position = rand() % nbcase;
+
+     if (g.visible[position].val != BOMBE) 
+    {
+      g.visible[position].val = BOMBE;
+      bombe_genereted++;
+      printf("Bombe placée à l'indice %2d (x:%d, y:%d)\n\n", 
+             position, g.visible[position].x, g.visible[position].y);
+    }
   }
-  
-  if (!trouve) return -1;
 
-  return i;
+  afficher_all_case(g);
+
+  printf("Nombre de bombes placée : %d\n\n", bombe_genereted);
+  return g;
 }
-
- 
 
 
 

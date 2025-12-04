@@ -48,10 +48,6 @@ struct Grille initialiser_case(struct Grille grille);
 // Initialisation de la grille
 struct Grille initialiser_grille();
 
-struct Case generer_case(int taille);
-
-int rechercher_case(struct Grille grille, struct Case c);
-
 struct Grille generer_bombe(struct Grille grille);
 
 // struct Grille generer_bonus(struct Grille grille);
