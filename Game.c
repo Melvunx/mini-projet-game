@@ -15,7 +15,7 @@ struct Difficulte initialiser_difficulte()
     printf(
       "**************************************************\n"
       "Choisissez le niveau de difficulté\n"
-      "Niveau facile :%d\tNiveau moyen :%d\tNiveau difficile :%d\n",
+      "| Niveau facile : %d | Niveau moyen : %d | Niveau difficile : %d |\n",
       DIFF_EASY, DIFF_MID, DIFF_HARD
     );
     
@@ -109,9 +109,7 @@ struct Grille generer_bombe(struct Grille g)
     }
   }
 
-  // afficher_all_case(g);
-
-  printf("Nombre de bombes placées : %d\n\n", bombe_genereted);
+  printf("\nNombre de bombes placées : %d\n\n", bombe_genereted);
   return g;
 }
 
@@ -121,7 +119,7 @@ struct Case coordonnee_case(int taille)
 
   do
   {
-    printf("Saisissez les coordonnées d'une case du jeu entre 1 et %d\nExemple : x:2 y:1\t|", taille);
+    printf("Saisissez les coordonnées d'une case du jeu entre 1 et %d\nExemple : x:2 y:1\n|", taille);
     scanf("%d %d", &case_joueur.x, &case_joueur.y);
   } while (case_joueur.x > taille || case_joueur.x < 1 || case_joueur.y > taille || case_joueur.y < 1);
   
@@ -141,39 +139,40 @@ struct Partie deminer_case(struct Partie p)
   p.grille.plateau[position].visible = case_joueur.visible;
 
   if (p.grille.plateau[position].val == VIDE) p.score++;
-  else p.terminer = 1;
+  else 
+  {
+    p.terminer = 1;
+    p.stat = DEFAITE;
+  }
+  
+  if (p.score == case_vide) 
+  {
+    p.terminer = 1;
+    p.stat = VICTOIRE;
+  }
 
-  if (p.score == case_vide) p.terminer = 1;
-
-  afficher_grille(p.grille);
+  printf("\n");
   afficher_deminage(p.grille.plateau[position].val);
 
   return p;
 }
 
-char commencer_partie()
+void commencer_partie()
 {
-  struct Partie p = {.score = 0, .terminer = 0};
-  char r; //Recommencer la partie ou non
+  struct Partie p = {.score = 0, .terminer = 0, .stat = INDETERMINE};
 
   p.grille = initialiser_grille(p.grille);
 
   p.grille = generer_bombe(p.grille);
 
-  afficher_grille(p.grille);
-
   do
   {
+    afficher_score(p);
+    printf("\n");
+    afficher_grille(p.grille);
     p = deminer_case(p);
+    printf("\n");
   } while (!p.terminer);
   
-  // fin_partie(p);
-
-  do
-  {
-    printf("Voulez-vous recommencer la partie ? (o|O pour oui, n|N pour non) :");
-    scanf("%c", &r);
-  } while (r != 'o' || r != 'O' || r != 'n' || r != 'N');
-
-  return r;
+  fin_partie(p);
 }

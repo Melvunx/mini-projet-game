@@ -20,6 +20,12 @@ enum CaseType {
   BONUS,
 };
 
+enum Statut {
+  INDETERMINE,
+  DEFAITE,
+  VICTOIRE
+};
+
 struct Difficulte {
   int taille;
   char niveau[MAX_CHAR + 1]; // facile moyen difficile
@@ -43,6 +49,7 @@ struct Partie {
   int score;
   struct Grille grille;
   int terminer;
+  enum Statut stat;
 };
 
 // Initialisation de la difficulté
@@ -65,10 +72,7 @@ int deminer(struct Grille grille, struct Case c);
 
 struct Partie deminer_case(struct Partie partie);
 
-// incrémenter le score
-// int deminer(struct Case c);
-
-char commencer_partie();
+void commencer_partie();
 
 
 #endif

@@ -7,13 +7,14 @@
 int main() {
 
   srand(time(NULL)); //Initialisation du rand
-  char r;
-do
-{
-  r = commencer_partie();
-} while (r != 'n' || r != 'N');
+  int choix_joueur;
 
-  
+  do
+  {
+    commencer_partie();
+    printf("Voulez-vous recommencer la partie ? (1 pour oui, 0 pour non) : ");
+    scanf("%d", &choix_joueur);
+  } while (choix_joueur == 1);
 
   return 0;
 }
