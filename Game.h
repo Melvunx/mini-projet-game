@@ -10,6 +10,8 @@
 // Constantes pour le jeu
 #define MAX_TAILLE 6
 #define MAX_CASE 36
+#define MAX_NOM_BONUS 30
+#define MAX_EFFET_BONUS 255
 
 
 enum CaseType {
@@ -25,10 +27,23 @@ enum Statut {
   VICTOIRE
 };
 
+enum ActionBonus {
+  AFFICHE_BOMBE,
+  AFFICHE_CASE,
+  ESQUIVE_BOMBE,
+};
+
+struct Bonus {
+  char nom[MAX_NOM_BONUS];
+  char effet[MAX_EFFET_BONUS];
+  enum ActionBonus action;
+};
+
 struct Difficulte {
   int taille;
   char niveau[MAX_CHAR + 1]; // facile moyen difficile
   int nb_bombe;
+  int nb_bonus;
   int esquive; // Niveau d'esquive en % 
 };
 
@@ -36,6 +51,7 @@ struct Case {
   int x;
   int y;
   enum CaseType val;
+  struct Bonus bonus;
   int visible; // 0 pour invisible et 1 pour visible
 };
 

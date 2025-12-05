@@ -6,9 +6,9 @@
 // Faire un switch pour séparer les cas
 void afficher_val_cases(struct Case c)
 {
-  // if (!c.visible) printf("#");
+  if (!c.visible) printf("#");
 
-  // else {
+  else {
     switch (c.val)
     {
     case VIDE:
@@ -26,7 +26,7 @@ void afficher_val_cases(struct Case c)
     default:
       printf("#");
       break;
-    // }
+    }
   }
 }
 
