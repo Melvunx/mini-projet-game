@@ -4,6 +4,23 @@
 #include "Game.h"
 #include "Affichage.h"
 
+struct Bonus BONUS_DISPONIBLES[NB_TYPES_BONUS] = {
+  {
+    .nom = "Détecteur aguérri",
+    .effet = "Révèle une bombe aléatoire dans la grille !",
+    .action = AFFICHE_BOMBE
+  },
+  {
+    .nom = "Safe place",
+    .effet = "Révèle une case sûre dans la grille !",
+    .action = AFFICHE_CASE
+  },
+  {
+    .nom = "Bouclier anti-bombe",
+    .effet = "Protection contre la prochaine bombe !",
+    .action = BOUCLIER
+  }
+};
 
 struct Difficulte initialiser_difficulte()
 {
@@ -28,24 +45,32 @@ struct Difficulte initialiser_difficulte()
     strcpy(d.niveau, "Facile");
     d.taille = 4;
     d.nb_bombe = 5;
+    d.nb_bonus = 1;
+    d.esquive = 10;
     break;
     
     case DIFF_MID:
     strcpy(d.niveau, "Moyen");
     d.taille = 5;
+    d.nb_bonus = 2;
     d.nb_bombe = 8;
+    d.esquive = 5;
     break;
     
     case DIFF_HARD:
     strcpy(d.niveau, "Difficle");
     d.taille = 6;
+    d.nb_bonus = 3;
     d.nb_bombe = 12;
+    d.esquive = 0;
     break;
     
     default:
     strcpy(d.niveau, "facile");
-    d.nb_bombe = 6;
     d.taille = 4;
+    d.nb_bombe = 5;
+    d.nb_bonus = 1;
+    d.esquive = 10;
   }
   
   return d;
@@ -63,6 +88,7 @@ struct Grille initialiser_cases(struct Grille g)
       g.plateau[i].y = y;
       g.plateau[i].val = 0;
       g.plateau[i].visible = 0;
+      g.plateau[i].index_bonus = -1;
       i++;
     }
   }
@@ -124,31 +150,129 @@ struct Grille detecter_bombe_proche(struct Grille g, int position)
 struct Grille generer_bombes(struct Grille g)
 {
   int nbcase = g.diff.taille * g.diff.taille, 
-  bombe_genereted = 0;
+  bombe_generee = 0;
   int position;
   
 
-  while(bombe_genereted < g.diff.nb_bombe)
+  while(bombe_generee < g.diff.nb_bombe)
   {
     position = rand() % nbcase;
 
-     if (g.plateau[position].val != BOMBE) 
+    if (g.plateau[position].val != BOMBE) 
     {
       g.plateau[position].val = BOMBE;
 
       g = detecter_bombe_proche(g, position);
 
-      bombe_genereted++;
+      bombe_generee++;
     }
   }
 
-  printf("\nNombre de bombes placées : %d\n\n", bombe_genereted);
+  printf("\nNombre de bombes placées : %d\n\n", bombe_generee);
   return g;
+}
+
+struct Grille generer_bonus(struct Grille g)
+{
+  int nbcase = g.diff.taille * g.diff.taille, 
+  bonus_genere = 0;
+  int position;
+
+  while (bonus_genere < g.diff.nb_bonus)
+  {
+    position = rand() % nbcase;
+
+    if (g.plateau[position].val == VIDE)
+    {
+      g.plateau[position].val = BONUS;
+      g.plateau[position].index_bonus = rand() % NB_TYPES_BONUS;
+      bonus_genere++;
+    }
+  }
+
+  return g;
+}
+
+struct Grille reveler_bombe(struct Grille g)
+{
+  int nbcases = g.diff.taille * g.diff.taille;
+  int bombes_cachees[MAX_CASE];
+  int nb_bombes_cachees = 0;
+
+  for (int i = 0; i < nbcases; i++)
+  {
+    if (g.plateau[i].val == BOMBE && g.plateau[i].visible == 0)
+    {
+      bombes_cachees[nb_bombes_cachees] = i;
+      nb_bombes_cachees++;
+    }
+  }
+
+  if (nb_bombes_cachees > 0)
+  {
+    int index = rand() % nb_bombes_cachees;
+    int position = bombes_cachees[index];
+    g.plateau[position].visible = 1;
+
+    printf("Bombe révélée en (%d; %d) !\n", g.plateau[position].x, g.plateau[position].y);
+  }
+
+  else printf("Aucune bombe cachée à révéler.\n");
+
+}
+
+struct Grille reveler_case_sure(struct Grille g)
+{
+  int nbcases = g.diff.taille * g.diff.taille;
+  int case_sures[MAX_CASE];
+  int nbcases_sures = 0;
+
+  for (int i = 0; i < nbcases; i++)
+  {
+    if ((g.plateau[i].val == VIDE || g.plateau[i].val == PROCHE) && g.plateau[i].visible == 0)
+    {
+      case_sures[nbcases_sures] = i;
+      nbcases_sures++;
+    }
+  }
+
+  if (nbcases_sures > 0)
+  {
+    int index = rand() % nbcases_sures;
+    int position = case_sures[index];
+    g.plateau[position].visible = 1;
+
+    printf("Case sûre révélée en (%d; %d) !\n", g.plateau[position].x, g.plateau[position].y);
+  }
+
+  else printf("Aucune case sûre à révéler.\n");
+}
+
+struct Grille activer_bonus(struct Partie p, struct Bonus bonus)
+{
+  switch (bonus.action)
+  {
+  case AFFICHE_BOMBE:
+    p.grille = reveler_bombe(p.grille);
+    break;
+  
+  case AFFICHE_CASE:
+    p.grille = reveler_case_sure(p.grille);
+    break;
+
+  case BOUCLIER:
+    p.grille.diff.esquive += 100; // 100% d'esquive pour le prochain déminage
+    printf("\nVous êtes protégé contre la prochaine bombe !\n\n");
+    break;
+  }
+
+  p.bonus_trouve++;
+  return p.grille;
 }
 
 struct Case coordonnee_case(int taille)
 {
-  struct Case case_joueur = {.val = VIDE, .visible = 1};
+  struct Case case_joueur = {.val = VIDE, .index_bonus = -1, .visible = 1};
 
   do
   {
@@ -162,44 +286,94 @@ struct Case coordonnee_case(int taille)
   return case_joueur;
 }
 
+struct Partie action_case(struct Partie p, int position)
+{
+  struct Case case_actuelle = p.grille.plateau[position];
+  int esquive_bombe = (rand() % POURCENT) + 1;
+
+  switch (case_actuelle.val)
+  {
+    case VIDE:
+      p.score++;
+      printf("%s\n", cases_vide[rand() % MAX_MESSAGE]);
+      break;
+
+    case BOMBE:
+      if (p.grille.diff.esquive >= 100)
+      {
+        printf("\n\nBouclier activé !\nVous avez esquivé la bombe !\n\n");
+        p.grille.diff.esquive -= 100; // Consommation du bouclier
+      }
+      else if (p.grille.diff.esquive >= esquive_bombe)
+      {
+        printf("\n\nOn a eu chaud !\nVous avez esquivé la bombe !\n\n");
+      }
+      else {
+        printf("%s\n", cases_bombe[rand() % MAX_MESSAGE]);
+        p.terminer = 1;
+        p.stat = DEFAITE;
+      }
+      break;
+
+    case PROCHE:
+      p.score++;
+      printf("%s\n", cases_proche[rand() % MAX_MESSAGE]);
+      break;
+
+    case BONUS:
+      if (case_actuelle.index_bonus != -1) 
+      {
+        p.grille = activer_bonus(p, BONUS_DISPONIBLES[case_actuelle.index_bonus]);
+
+        printf("%s\n\n"
+          "*********************\n"
+          "%s\n"
+          "%s\n"
+          "*********************\n", 
+          cases_bonus[rand() % MAX_MESSAGE], 
+          BONUS_DISPONIBLES[case_actuelle.index_bonus].nom,
+          BONUS_DISPONIBLES[case_actuelle.index_bonus].effet
+        );
+
+        p.score++;
+      }
+      break;
+  }
+  return p;
+}
+
 
 struct Partie deminer_case(struct Partie p)
 {
   int taille = p.grille.diff.taille;
   struct Case case_joueur = coordonnee_case(taille);
-  int position = rechercher_case(p.grille, case_joueur);
-  int case_vide = (taille * taille) - p.grille.diff.nb_bombe;
+
+  int position = rechercher_case(p.grille, case_joueur),
+  case_vide = (taille * taille) - p.grille.diff.nb_bombe;
 
   p.grille.plateau[position].visible = case_joueur.visible;
 
-  if (p.grille.plateau[position].val == VIDE || p.grille.plateau[position].val == PROCHE) p.score++;
-  else 
-  {
-    p.terminer = 1;
-    p.stat = DEFAITE;
-  }
+  p = action_case(p, position);
   
   if (p.score == case_vide) 
   {
     p.terminer = 1;
     p.stat = VICTOIRE;
   }
-
   
   printf("\n");
-  afficher_deminage(p.grille.plateau[position].val);
-  
-  // p.grille = detecter_bombe_proche(p.grille, position);
   return p;
 }
 
 void commencer_partie()
 {
-  struct Partie p = {.score = 0, .terminer = 0, .stat = INDETERMINE};
+  struct Partie p = {.score = 0, .terminer = 0, .bonus_trouve = 0,.stat = INDETERMINE};
 
   p.grille = initialiser_grille(p.grille);
 
   p.grille = generer_bombes(p.grille);
+
+  p.grille = generer_bonus(p.grille);
 
   afficher_all_case(p.grille);
 

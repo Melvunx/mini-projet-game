@@ -3,6 +3,38 @@
 #include "Affichage.h"
 #include "Game.h"
 
+char cases_vide[MAX_MESSAGE][TAILLE_MESSAGE] = {
+  "Ouf c'est une case vide !\n",
+  "Une case vide !\n",
+  "Yes !!\nUne case vide\n",
+  "Oh...\nUne case vide \n",
+  "Une\nCase\nVide\n"
+};
+
+char cases_bombe[MAX_MESSAGE][TAILLE_MESSAGE] = {
+  "Oh...\nUne bombe :'(\n",
+  "Une bombe...\n",
+  "Et c'est la bombe\n",
+  "Une bombe sauvage est apparu !\n",
+  "KABOOM !!!!\n"
+};
+
+char cases_proche[MAX_MESSAGE][TAILLE_MESSAGE] = {
+  "Attention, une bombe est proche !\n", 
+  "Aïe\n on a eu chaud !\n", 
+  "Cela passe sur le fil !\n", 
+  "Vous avez les mains moitent non ?\n", 
+  "Contrôlez vos angles morts !\nVous êtes proche d'une bombe\n"
+};
+
+char cases_bonus[MAX_MESSAGE][TAILLE_MESSAGE] = {
+  "Un bonus à été trouvé !\n", 
+  "Olala un bonus !\n", 
+  "Attention !\nUn bonus sauvage apparaît !\n", 
+  "Bonuuuuuuuus !\n", 
+  "Bonus débloquer !!\n"
+};
+
 // Faire un switch pour séparer les cas
 void afficher_val_cases(struct Case c)
 {
@@ -23,9 +55,26 @@ void afficher_val_cases(struct Case c)
       printf("_");
       break;
 
-    default:
-      printf("#");
-      break;
+    case BONUS:
+      switch (c.index_bonus)
+      {
+      case DETECTEUR:
+        printf("¤");
+        break;
+
+      case CASE_SUR:
+        printf("+");
+        break;
+
+      case ESQUIVE:
+        printf("@");
+        break;
+      
+      // index_bonus == -1
+      default:
+        printf("□");
+        break;
+      }
     }
   }
 }
@@ -58,45 +107,12 @@ void afficher_case(struct Case c)
 void afficher_all_case(struct Grille g)
 {
   int nbcases = g.diff.taille * g.diff.taille;
+  struct Case c;
   for (int i = 0; i < nbcases; i++)
   {
-    printf("Case n° = %2d | x:%d y:%d val:%2d |\n", 
-      i + 1, g.plateau[i].x, g.plateau[i].y, g.plateau[i].val);
-  }
-}
-
-void afficher_deminage(int val)
-{
-  char cases_vide[MAX_MESSAGE][TAILLE_MESSAGE] = {
-    "Ouf c'est une case vide !\n",
-    "Une case vide !\n",
-    "Yes !!\nUne case vide\n",
-    "Oh...\nUne case vide \n",
-    "Une\nCase\nVide\n"
-  };
-
-  char cases_bombe[MAX_MESSAGE][TAILLE_MESSAGE] = {
-    "Oh...\nUne bombe :'(\n",
-    "Une bombe...\n",
-    "Et c'est la bombe\n",
-    "Une bombe sauvage est apparu !\n",
-    "KABOOM !!!!\n"
-  };
-
-  // char cases_bonus[MAX_MESSAGE][TAILLE_MESSAGE] = {"\n", "\n", "\n", "\n", "\n"};
-
-    switch (val)
-  {
-  case VIDE:
-    printf("%s\n", cases_vide[rand() % MAX_MESSAGE]);
-    break;
-    
-    case BOMBE:
-    printf("%s\n", cases_bombe[rand() % MAX_MESSAGE]);
-    break;
-  
-  default:
-    break;
+    c = g.plateau[i];
+    printf("Case n° = %2d | x:%d y:%d val:%2d | visible:%d | bonus:%2d |\n", 
+      i + 1, c.x, c.y, c.val, c.visible, c.index_bonus);
   }
 }
 
