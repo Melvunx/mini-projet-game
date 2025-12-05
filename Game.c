@@ -27,19 +27,19 @@ struct Difficulte initialiser_difficulte()
     case DIFF_EASY:
     strcpy(d.niveau, "Facile");
     d.taille = 4;
-    d.nb_bombe = 6;
+    d.nb_bombe = 5;
     break;
     
     case DIFF_MID:
     strcpy(d.niveau, "Moyen");
     d.taille = 5;
-    d.nb_bombe = 10;
+    d.nb_bombe = 8;
     break;
     
     case DIFF_HARD:
     strcpy(d.niveau, "Difficle");
     d.taille = 6;
-    d.nb_bombe = 14;
+    d.nb_bombe = 12;
     break;
     
     default:
@@ -93,10 +93,40 @@ int rechercher_case(struct Grille g, struct Case c)
   return -1;
 }
 
-struct Grille generer_bombe(struct Grille g)
+struct Grille detecter_bombe_proche(struct Grille g, int position)
 {
-  int nbcase = g.diff.taille * g.diff.taille;
-  int position, bombe_genereted = 0;
+  int taille = g.diff.taille,
+  // Coordonnée de la case sélectionnée
+  x = position % taille,
+  y = position / taille;
+
+  // On verifie la case à gauche si elle n'est pas au bord gauche de la grille
+  if (x > 0)
+  {
+    int index_gauche = y * taille + (x - 1);
+    
+    if (g.plateau[index_gauche].val == VIDE)
+    g.plateau[index_gauche].val = PROCHE;
+  }
+  
+  // On verifie la case à droite si elle n'est pas au bord droit de la grille
+  if (x < taille - 1)
+  {
+    int index_droite = y * taille + (x + 1);
+
+    if (g.plateau[index_droite].val == VIDE)
+      g.plateau[index_droite].val = PROCHE;
+  }
+
+  return g;
+}
+
+struct Grille generer_bombes(struct Grille g)
+{
+  int nbcase = g.diff.taille * g.diff.taille, 
+  bombe_genereted = 0;
+  int position;
+  
 
   while(bombe_genereted < g.diff.nb_bombe)
   {
@@ -105,6 +135,9 @@ struct Grille generer_bombe(struct Grille g)
      if (g.plateau[position].val != BOMBE) 
     {
       g.plateau[position].val = BOMBE;
+
+      g = detecter_bombe_proche(g, position);
+
       bombe_genereted++;
     }
   }
@@ -115,7 +148,7 @@ struct Grille generer_bombe(struct Grille g)
 
 struct Case coordonnee_case(int taille)
 {
-  struct Case case_joueur = {.val = 0, .visible = 1};
+  struct Case case_joueur = {.val = VIDE, .visible = 1};
 
   do
   {
@@ -129,6 +162,7 @@ struct Case coordonnee_case(int taille)
   return case_joueur;
 }
 
+
 struct Partie deminer_case(struct Partie p)
 {
   int taille = p.grille.diff.taille;
@@ -138,7 +172,7 @@ struct Partie deminer_case(struct Partie p)
 
   p.grille.plateau[position].visible = case_joueur.visible;
 
-  if (p.grille.plateau[position].val == VIDE) p.score++;
+  if (p.grille.plateau[position].val == VIDE || p.grille.plateau[position].val == PROCHE) p.score++;
   else 
   {
     p.terminer = 1;
@@ -151,9 +185,11 @@ struct Partie deminer_case(struct Partie p)
     p.stat = VICTOIRE;
   }
 
+  
   printf("\n");
   afficher_deminage(p.grille.plateau[position].val);
-
+  
+  // p.grille = detecter_bombe_proche(p.grille, position);
   return p;
 }
 
@@ -163,7 +199,9 @@ void commencer_partie()
 
   p.grille = initialiser_grille(p.grille);
 
-  p.grille = generer_bombe(p.grille);
+  p.grille = generer_bombes(p.grille);
+
+  afficher_all_case(p.grille);
 
   do
   {

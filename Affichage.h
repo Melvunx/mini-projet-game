@@ -24,6 +24,8 @@ void afficher_score(struct Partie partie);
 
 void afficher_bombes(struct Grille grille);
 
+
+
 void fin_partie(struct Partie partie);
 
 #endif

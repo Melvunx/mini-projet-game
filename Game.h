@@ -10,13 +10,12 @@
 // Constantes pour le jeu
 #define MAX_TAILLE 6
 #define MAX_CASE 36
-// #define BOMBE -2
-// #define PROCHE -1 // Case a proximité d'une bombe
-// #define VIDE 0
+
 
 enum CaseType {
   VIDE,
   BOMBE,
+  PROCHE,
   BONUS,
 };
 
@@ -29,7 +28,7 @@ enum Statut {
 struct Difficulte {
   int taille;
   char niveau[MAX_CHAR + 1]; // facile moyen difficile
-  int nb_bombe; 
+  int nb_bombe;
   int esquive; // Niveau d'esquive en % 
 };
 
@@ -60,7 +59,7 @@ struct Grille initialiser_cases(struct Grille grille);
 // Initialisation de la grille
 struct Grille initialiser_grille();
 
-struct Grille generer_bombe(struct Grille grille);
+struct Grille generer_bombes(struct Grille grille);
 
 // struct Grille generer_bonus(struct Grille grille);
 
@@ -71,6 +70,8 @@ int rechercher_case(struct Grille grille, struct Case c);
 int deminer(struct Grille grille, struct Case c);
 
 struct Partie deminer_case(struct Partie partie);
+
+struct Grille detecter_bombe_proche(struct Grille grille, int position);
 
 void commencer_partie();
 
