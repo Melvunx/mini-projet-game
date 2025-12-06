@@ -21,6 +21,8 @@ char cases_bonus[MAX_MESSAGE][TAILLE_MESSAGE];
 
 
 // Explication
+void afficher_bonus();
+
 void explication_jeu();
 
 
@@ -43,8 +45,7 @@ void afficher_bombes(struct Grille grille);
 
 void fin_partie(struct Partie partie);
 
-
 // Statistique
-void recapitulatif_partie(struct Partie partie);
+void recapitulatif_partie();
 
 #endif

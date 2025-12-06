@@ -71,6 +71,9 @@ struct Partie {
   enum Statut stat;
 };
 
+
+
+
 struct Bonus BONUS_DISPONIBLES[NB_TYPES_BONUS];
 
 // Initialisation de la difficulté
@@ -101,6 +104,6 @@ struct Partie deminer_case(struct Partie partie);
 
 struct Grille detecter_bombe_proche(struct Grille grille, int position);
 
-void commencer_partie();
+struct Partie commencer_partie();
 
 #endif

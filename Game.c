@@ -190,6 +190,8 @@ struct Grille generer_bonus(struct Grille g)
     }
   }
 
+  printf("\nNombre de bonus placés : %d\n\n", bonus_genere);
+
   return g;
 }
 
@@ -280,7 +282,7 @@ struct Case coordonnee_case(int taille)
     scanf("%d %d", &case_joueur.x, &case_joueur.y);
   } while (case_joueur.x > taille || case_joueur.x < 1 || case_joueur.y > taille || case_joueur.y < 1);
   
-  printf("Vous avez saisis les coordonnées ");
+  printf("\nVous avez saisis les coordonnées ");
   afficher_case(case_joueur);
   
   return case_joueur;
@@ -342,7 +344,6 @@ struct Partie action_case(struct Partie p, int position)
   return p;
 }
 
-
 struct Partie deminer_case(struct Partie p)
 {
   int taille = p.grille.diff.taille;
@@ -365,7 +366,7 @@ struct Partie deminer_case(struct Partie p)
   return p;
 }
 
-void commencer_partie()
+struct Partie commencer_partie()
 {
   struct Partie p = {.score = 0, .terminer = 0, .bonus_trouve = 0,.stat = INDETERMINE};
 
@@ -374,8 +375,6 @@ void commencer_partie()
   p.grille = generer_bombes(p.grille);
 
   p.grille = generer_bonus(p.grille);
-
-  afficher_all_case(p.grille);
 
   do
   {
@@ -387,4 +386,6 @@ void commencer_partie()
   } while (!p.terminer);
   
   fin_partie(p);
+
+  return p;
 }
