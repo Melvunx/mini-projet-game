@@ -56,34 +56,40 @@ void explication_jeu()
   printf("\t\t\t*     ¤ Le Démineur ¤     *\n");
   printf("\t\t\t***************************\n\n\n");
 
-  sleep(1);
+  sleep(2);
 
   printf("\t\t\t\t\t\t$ By Melvunx $\n\n");
 
-  sleep(1);
+  sleep(2);
 
-  printf(
-    "Bienvenue sur le \"Le Démineur\" !\n"
-    "Ce jeu consiste a déminer toutes les cases d'un plateau sans tomber sur 1 seul bombe !\n"
-    "Il existe 3 niveaux de jeux : le niveau facile, moyen et dificile.\n"
-    "C'est 3 niveaux de difficultés influent sur le nombre de bombes que vous allez devoir éviter alors choisissez bien !\n"
-    "\n"
-    "Pour vous aidez dans vos tâches, vous avez droit à %d bonus !\n\n",
-    NB_TYPES_BONUS
-  );
-
+  printf("RÈGLES DU JEU :\n");
+  printf("   → Déminez toutes les cases du plateau sans tomber sur une bombe\n");
+  printf("   → Trois niveaux de difficulté : Facile, Moyen et Difficile\n");
+  printf("   → Plus le niveau est élevé, plus il y a de bombes !\n");
+  printf("   → Vous avez une petite chance d'esquiver une bombe (selon la difficulté)\n\n");
   sleep(4);
 
-  printf("****************************************************\n");
+  printf("BONUS DISPONIBLES : %d types\n\n", NB_TYPES_BONUS);
+  printf("════════════════════════════════════════════════════════════════════════════\n");
   afficher_bonus();
-  printf("****************************************************\n\n");
+  printf("════════════════════════════════════════════════════════════════════════════\n\n");
+  sleep(4);
   
+  printf("COMMENT JOUER ?\n");
+  printf("   → Saisissez les coordonnées de la case à déminer (ligne, colonne)\n");
+  printf("   → Utilisez vos bonus stratégiquement pour maximiser vos chances\n");
+  printf("   → Faites attention aux indices révélés sur le plateau\n\n");
   sleep(3);
 
-  printf(
-    "Saisissez les coordonnées des cases que vous voulez déminer et le tour et jouer !\n"
-    "Bonne chance et amusez vous !\n\n\n"
-  );
+  printf("Conseil : Commencez par les coins, c'est souvent plus sûr !\n\n");
+
+  printf("════════════════════════════════════════════════════════════════════════════\n");
+  printf("                    Bonne chance et amusez-vous bien !\n");
+  printf("════════════════════════════════════════════════════════════════════════════\n\n");
+  sleep(2);
+
+  printf("Appuyez sur Entrée pour commencer...");
+  getchar(); // Attend que l'utilisateur appuie sur Entrée
 }
 
 // Faire un switch pour séparer les cas
@@ -214,16 +220,19 @@ void fin_partie(struct Partie p)
   }
 }
 
-void recapitulatif_partie(struct Partie p)
+void recapitulatif_partie(struct Statistique stat)
 {
   printf("\n");
   printf("\t\t*************************\n");
   printf("\t\t*     Récapitulatif     *\n");
-  printf("\t\t*************************\n\n\n");
+  printf("\t\t*************************\n\n");
 
   printf(
-    "Nombre de bonus trouvé : %2d\n"
-    ""
+    "\nscore total : %2d/%2d\n\nNombre de bonus trouvé : %2d\n\nNombre de partie joué : %2d\n\n", 
+    stat.total_score,
+    stat.max_score,
+    stat.nb_bonus, 
+    stat.nb_partie
   );
 
 }

@@ -30,7 +30,7 @@ struct Difficulte initialiser_difficulte()
   do
   {
     printf(
-      "**************************************************\n"
+      "\n════════════════════════════════════════════════════════════════════════════\n"
       "Choisissez le niveau de difficulté\n"
       "| Niveau facile : %d | Niveau moyen : %d | Niveau difficile : %d |\n",
       DIFF_EASY, DIFF_MID, DIFF_HARD
@@ -352,8 +352,15 @@ struct Partie deminer_case(struct Partie p)
   int position = rechercher_case(p.grille, case_joueur),
   case_vide = (taille * taille) - p.grille.diff.nb_bombe;
 
+  if (p.grille.plateau[position].visible == case_joueur.visible)
+  {
+    printf("\nVous avez déjà déminer cette case !\n");
+    return p;
+  }
+
   p.grille.plateau[position].visible = case_joueur.visible;
 
+  printf("\n");
   p = action_case(p, position);
   
   if (p.score == case_vide) 
@@ -361,7 +368,7 @@ struct Partie deminer_case(struct Partie p)
     p.terminer = 1;
     p.stat = VICTOIRE;
   }
-  
+
   printf("\n");
   return p;
 }
@@ -380,6 +387,7 @@ struct Partie commencer_partie()
   {
     afficher_score(p);
     printf("\n");
+
     afficher_grille(p.grille);
     p = deminer_case(p);
     printf("\n");
@@ -388,4 +396,17 @@ struct Partie commencer_partie()
   fin_partie(p);
 
   return p;
+}
+
+struct Statistique generer_stat(struct Statistique stat, struct Partie p)
+{
+  int taille = p.grille.diff.taille,
+  max_score_partie = (taille * taille) - p.grille.diff.nb_bombe;
+
+  stat.total_score += p.score;
+  stat.max_score += max_score_partie;
+  stat.nb_bonus += p.bonus_trouve;
+  stat.nb_partie++;
+
+  return stat;
 }

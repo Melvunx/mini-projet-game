@@ -46,6 +46,7 @@ void afficher_bombes(struct Grille grille);
 void fin_partie(struct Partie partie);
 
 // Statistique
-void recapitulatif_partie();
+
+void recapitulatif_partie(struct Statistique statistique);
 
 #endif

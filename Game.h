@@ -71,7 +71,13 @@ struct Partie {
   enum Statut stat;
 };
 
-
+struct Statistique
+{
+  int total_score;
+  int max_score;
+  int nb_bonus;
+  int nb_partie;
+};
 
 
 struct Bonus BONUS_DISPONIBLES[NB_TYPES_BONUS];
@@ -105,5 +111,7 @@ struct Partie deminer_case(struct Partie partie);
 struct Grille detecter_bombe_proche(struct Grille grille, int position);
 
 struct Partie commencer_partie();
+
+struct Statistique generer_stat(struct Statistique statistique, struct Partie partie);
 
 #endif
