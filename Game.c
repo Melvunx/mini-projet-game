@@ -386,10 +386,8 @@ struct Partie commencer_partie()
 
   afficher_difficulte(p.grille.diff);
 
-  
   do
   {
-    afficher_toutes_case(p.grille);
 
     afficher_score(p);
     printf("\n");
@@ -399,7 +397,7 @@ struct Partie commencer_partie()
 
     printf("\n");
   } while (!p.terminer);
-  
+
   fin_partie(p);
 
   return p;
@@ -414,6 +412,8 @@ struct Statistique generer_stat(struct Statistique stat, struct Partie p)
   stat.max_score += max_score_partie;
   stat.nb_bonus += p.bonus_trouve;
   stat.nb_partie++;
+  
+  p.stat == DEFAITE  ? stat.nb_defaite++ : stat.nb_victoire++;
 
   return stat;
 }

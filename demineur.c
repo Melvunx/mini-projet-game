@@ -9,9 +9,9 @@ int main() {
   srand(time(NULL)); //Initialisation du rand
   int choix_joueur;
   struct Partie p;
-  struct Statistique stat = {.total_score = 0, .max_score = 0, .nb_bonus = 0, .nb_partie = 0};
+  struct Statistique stat = {.total_score = 0, .max_score = 0, .nb_bonus = 0, .nb_partie = 0, .nb_defaite = 0, .nb_victoire = 0};
 
-  // explication_jeu();
+  explication_jeu();
   
   do
   {

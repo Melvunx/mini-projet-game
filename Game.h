@@ -77,6 +77,8 @@ struct Statistique
   int max_score;
   int nb_bonus;
   int nb_partie;
+  int nb_victoire;
+  int nb_defaite;
 };
 
 // Définition des bonus

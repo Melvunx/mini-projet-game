@@ -219,11 +219,14 @@ void recapitulatif_partie(struct Statistique stat)
   printf("\t\t*************************\n\n");
 
   printf(
-    "\nscore total : %2d/%2d\n\nNombre de bonus trouvé : %2d\n\nNombre de partie joué : %2d\n\n", 
+    "\nscore total : %2d/%2d\n\nNombre de bonus trouvé : %2d\n\nNombre de partie joué : %2d\n\n"
+    "Nombre de défaite : %2d\n\nNombre de victoire : %2d\n\n", 
     stat.total_score,
     stat.max_score,
     stat.nb_bonus, 
-    stat.nb_partie
+    stat.nb_partie,
+    stat.nb_defaite,
+    stat.nb_victoire
   );
 
 }
