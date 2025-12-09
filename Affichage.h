@@ -11,6 +11,7 @@
 // Messages de déminage
 #define MAX_MESSAGE 5
 #define TAILLE_MESSAGE 60
+
 char cases_vide[MAX_MESSAGE][TAILLE_MESSAGE];
 
 char cases_bombe[MAX_MESSAGE][TAILLE_MESSAGE];
@@ -29,15 +30,11 @@ void explication_jeu();
 // Affichage du jeux
 void afficher_grille(struct Grille grille);
 
-void afficher_difficulte(struct Difficulte diff);
-
-void afficher_recap(struct Partie partie);
+void afficher_difficulte(struct Difficulte difficulte);
 
 void afficher_val_cases(struct Case c);
 
 void afficher_case(struct Case c);
-
-void afficher_all_case(struct Grille grille);
 
 void afficher_score(struct Partie partie);
 
@@ -45,8 +42,13 @@ void afficher_bombes(struct Grille grille);
 
 void fin_partie(struct Partie partie);
 
-// Statistique
 
+// Statistique
 void recapitulatif_partie(struct Statistique statistique);
 
+void afficher_recap(struct Partie partie);
+
+
+// Fonction de débug
+void afficher_toutes_case(struct Grille grille);
 #endif

@@ -92,7 +92,31 @@ void explication_jeu()
   getchar(); // Attend que l'utilisateur appuie sur Entrée
 }
 
-// Faire un switch pour séparer les cas
+void afficher_grille(struct Grille g)
+{
+  int i = 0;
+  
+  printf("\n");
+  for (int y = 1; y <= g.diff.taille; y++)
+  {
+    for (int x = 1; x <= g.diff.taille; x++)
+    {
+      if ((g.plateau[i].y == y) && (g.plateau[i].x == x))
+      {
+        afficher_val_cases(g.plateau[i]);
+        i++;
+      }
+    }
+    printf("\n");
+  }
+  printf("\n");
+}
+
+void afficher_difficulte(struct Difficulte diff)
+{
+  printf("\nVotre difficulté est : %s\n\n", diff.niveau);
+}
+
 void afficher_val_cases(struct Case c)
 {
   if (!c.visible) printf("#");
@@ -136,42 +160,9 @@ void afficher_val_cases(struct Case c)
   }
 }
 
-void afficher_grille(struct Grille g)
-{
-  int i = 0;
-  
-  printf("\n");
-  for (int y = 1; y <= g.diff.taille; y++)
-  {
-    for (int x = 1; x <= g.diff.taille; x++)
-    {
-      if ((g.plateau[i].y == y) && (g.plateau[i].x == x))
-      {
-        afficher_val_cases(g.plateau[i]);
-        i++;
-      }
-    }
-    printf("\n");
-  }
-  printf("\n");
-}
-
 void afficher_case(struct Case c)
 {
   printf("(x:%d; y:%d)\n", c.x, c.y);
-}
-
-// Debug
-void afficher_all_case(struct Grille g)
-{
-  int nbcases = g.diff.taille * g.diff.taille;
-  struct Case c;
-  for (int i = 0; i < nbcases; i++)
-  {
-    c = g.plateau[i];
-    printf("Case n° = %2d | x:%d y:%d val:%2d | visible:%d | bonus:%2d |\n", 
-      i + 1, c.x, c.y, c.val, c.visible, c.index_bonus);
-  }
 }
 
 void afficher_score(struct Partie p)
@@ -235,4 +226,16 @@ void recapitulatif_partie(struct Statistique stat)
     stat.nb_partie
   );
 
+}
+
+void afficher_toutes_case(struct Grille g)
+{
+  int nbcases = g.diff.taille * g.diff.taille;
+  struct Case c;
+  for (int i = 0; i < nbcases; i++)
+  {
+    c = g.plateau[i];
+    printf("Case n° = %2d | x:%d y:%d val:%2d | visible:%d | bonus:%2d |\n", 
+      i + 1, c.x, c.y, c.val, c.visible, c.index_bonus);
+  }
 }

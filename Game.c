@@ -39,6 +39,7 @@ struct Difficulte initialiser_difficulte()
     scanf("%d", &player_choice);
   } while (player_choice > 3 || player_choice < 0);
   
+  // Définition des niveaux de difficultés
   switch (player_choice)
   {
     case DIFF_EASY:
@@ -80,6 +81,7 @@ struct Grille initialiser_cases(struct Grille g)
 {
   int i = 0;
   
+  // Initialisation des cases ligne par ligne
   for (int y = 1; y <= g.diff.taille; y++)
   {
     for (int x = 1; x <= g.diff.taille; x++)
@@ -108,15 +110,29 @@ struct Grille initialiser_grille()
   return g;
 }
 
-int rechercher_case(struct Grille g, struct Case c)
+struct Grille generer_bombes(struct Grille g)
 {
-  int nbcase = g.diff.taille * g.diff.taille;
+  int nbcase = g.diff.taille * g.diff.taille, 
+  bombe_generee = 0;
+  int position;
+  
 
-  for (int i = 0; i < nbcase; i++)
+  while(bombe_generee < g.diff.nb_bombe)
   {
-    if (g.plateau[i].x == c.x && g.plateau[i].y == c.y) return i;
+    position = rand() % nbcase;
+
+    if (g.plateau[position].val != BOMBE) 
+    {
+      g.plateau[position].val = BOMBE;
+
+      g = detecter_bombe_proche(g, position);
+
+      bombe_generee++;
+    }
   }
-  return -1;
+
+  printf("\nNombre de bombes placées : %d\n\n", bombe_generee);
+  return g;
 }
 
 struct Grille detecter_bombe_proche(struct Grille g, int position)
@@ -147,31 +163,6 @@ struct Grille detecter_bombe_proche(struct Grille g, int position)
   return g;
 }
 
-struct Grille generer_bombes(struct Grille g)
-{
-  int nbcase = g.diff.taille * g.diff.taille, 
-  bombe_generee = 0;
-  int position;
-  
-
-  while(bombe_generee < g.diff.nb_bombe)
-  {
-    position = rand() % nbcase;
-
-    if (g.plateau[position].val != BOMBE) 
-    {
-      g.plateau[position].val = BOMBE;
-
-      g = detecter_bombe_proche(g, position);
-
-      bombe_generee++;
-    }
-  }
-
-  printf("\nNombre de bombes placées : %d\n\n", bombe_generee);
-  return g;
-}
-
 struct Grille generer_bonus(struct Grille g)
 {
   int nbcase = g.diff.taille * g.diff.taille, 
@@ -193,6 +184,33 @@ struct Grille generer_bonus(struct Grille g)
   printf("\nNombre de bonus placés : %d\n\n", bonus_genere);
 
   return g;
+}
+
+struct Case coordonnee_case(int taille)
+{
+  struct Case case_joueur = {.val = VIDE, .index_bonus = -1, .visible = 1};
+
+  do
+  {
+    printf("Saisissez les coordonnées d'une case du jeu entre 1 et %d\nExemple : x:2 y:1\n|", taille);
+    scanf("%d %d", &case_joueur.x, &case_joueur.y);
+  } while (case_joueur.x > taille || case_joueur.x < 1 || case_joueur.y > taille || case_joueur.y < 1);
+  
+  printf("\nVous avez saisis les coordonnées ");
+  afficher_case(case_joueur);
+  
+  return case_joueur;
+}
+
+int rechercher_case(struct Grille g, struct Case c)
+{
+  int nbcase = g.diff.taille * g.diff.taille;
+
+  for (int i = 0; i < nbcase; i++)
+  {
+    if (g.plateau[i].x == c.x && g.plateau[i].y == c.y) return i;
+  }
+  return -1;
 }
 
 struct Grille reveler_bombe(struct Grille g)
@@ -270,22 +288,6 @@ struct Grille activer_bonus(struct Partie p, struct Bonus bonus)
 
   p.bonus_trouve++;
   return p.grille;
-}
-
-struct Case coordonnee_case(int taille)
-{
-  struct Case case_joueur = {.val = VIDE, .index_bonus = -1, .visible = 1};
-
-  do
-  {
-    printf("Saisissez les coordonnées d'une case du jeu entre 1 et %d\nExemple : x:2 y:1\n|", taille);
-    scanf("%d %d", &case_joueur.x, &case_joueur.y);
-  } while (case_joueur.x > taille || case_joueur.x < 1 || case_joueur.y > taille || case_joueur.y < 1);
-  
-  printf("\nVous avez saisis les coordonnées ");
-  afficher_case(case_joueur);
-  
-  return case_joueur;
 }
 
 struct Partie action_case(struct Partie p, int position)
@@ -382,6 +384,8 @@ struct Partie commencer_partie()
   p.grille = generer_bombes(p.grille);
 
   p.grille = generer_bonus(p.grille);
+
+  afficher_difficulte(p.grille.diff);
 
   do
   {
