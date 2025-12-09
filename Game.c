@@ -65,13 +65,6 @@ struct Difficulte initialiser_difficulte()
     d.nb_bombe = 12;
     d.esquive = 0;
     break;
-    
-    default:
-    strcpy(d.niveau, "facile");
-    d.taille = 4;
-    d.nb_bombe = 5;
-    d.nb_bonus = 1;
-    d.esquive = 10;
   }
   
   return d;
@@ -79,12 +72,12 @@ struct Difficulte initialiser_difficulte()
 
 struct Grille initialiser_cases(struct Grille g)
 {
-  int i = 0;
+  int i = 0, taille_plateau = g.diff.taille;
   
   // Initialisation des cases ligne par ligne
-  for (int y = 1; y <= g.diff.taille; y++)
+  for (int y = 1; y <= taille_plateau; y++)
   {
-    for (int x = 1; x <= g.diff.taille; x++)
+    for (int x = 1; x <= taille_plateau; x++)
     {
       g.plateau[i].x = x;
       g.plateau[i].y = y;
@@ -101,12 +94,12 @@ struct Grille initialiser_cases(struct Grille g)
 struct Grille initialiser_grille()
 {
   struct Grille g;
-  
+
   // Initialisation de la difficulté
   g.diff = initialiser_difficulte();
-  
+
   g = initialiser_cases(g);
-  
+
   return g;
 }
 
@@ -216,13 +209,14 @@ int rechercher_case(struct Grille g, struct Case c)
 struct Grille reveler_bombe(struct Grille g)
 {
   int nbcases = g.diff.taille * g.diff.taille;
-  int bombes_cachees[MAX_CASE];
+  int bombes_cachees[MAX_CASE]; //Tableau d'indice de bombe cachée
   int nb_bombes_cachees = 0;
 
   for (int i = 0; i < nbcases; i++)
   {
     if (g.plateau[i].val == BOMBE && g.plateau[i].visible == 0)
     {
+      // Si une bombe est trouvée, on stocke son indice dans le tableau d'entier
       bombes_cachees[nb_bombes_cachees] = i;
       nb_bombes_cachees++;
     }
@@ -230,6 +224,7 @@ struct Grille reveler_bombe(struct Grille g)
 
   if (nb_bombes_cachees > 0)
   {
+    // On sélectionne une index aléatoire
     int index = rand() % nb_bombes_cachees;
     int position = bombes_cachees[index];
     g.plateau[position].visible = 1;
@@ -239,12 +234,13 @@ struct Grille reveler_bombe(struct Grille g)
 
   else printf("Aucune bombe cachée à révéler.\n");
 
+  return g;
 }
 
 struct Grille reveler_case_sure(struct Grille g)
 {
   int nbcases = g.diff.taille * g.diff.taille;
-  int case_sures[MAX_CASE];
+  int case_sures[MAX_CASE]; //Tableau d'indice de case vide
   int nbcases_sures = 0;
 
   for (int i = 0; i < nbcases; i++)
@@ -266,6 +262,8 @@ struct Grille reveler_case_sure(struct Grille g)
   }
 
   else printf("Aucune case sûre à révéler.\n");
+
+  return g;
 }
 
 struct Grille activer_bonus(struct Partie p, struct Bonus bonus)
@@ -275,12 +273,13 @@ struct Grille activer_bonus(struct Partie p, struct Bonus bonus)
   case AFFICHE_BOMBE:
     p.grille = reveler_bombe(p.grille);
     break;
-  
-  case AFFICHE_CASE:
+    
+    case AFFICHE_CASE:
     p.grille = reveler_case_sure(p.grille);
+    p.score++;
     break;
-
-  case BOUCLIER:
+    
+    case BOUCLIER:
     p.grille.diff.esquive += 100; // 100% d'esquive pour le prochain déminage
     printf("\nVous êtes protégé contre la prochaine bombe !\n\n");
     break;
@@ -387,13 +386,17 @@ struct Partie commencer_partie()
 
   afficher_difficulte(p.grille.diff);
 
+  
   do
   {
+    afficher_toutes_case(p.grille);
+
     afficher_score(p);
     printf("\n");
 
     afficher_grille(p.grille);
     p = deminer_case(p);
+
     printf("\n");
   } while (!p.terminer);
   

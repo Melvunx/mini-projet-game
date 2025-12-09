@@ -11,7 +11,7 @@ int main() {
   struct Partie p;
   struct Statistique stat = {.total_score = 0, .max_score = 0, .nb_bonus = 0, .nb_partie = 0};
 
-  explication_jeu();
+  // explication_jeu();
   
   do
   {
