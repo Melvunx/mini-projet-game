@@ -338,6 +338,7 @@ struct Partie action_case(struct Partie p, int position)
           BONUS_DISPONIBLES[case_actuelle.index_bonus].effet
         );
 
+        p.bonus_trouve++;
         p.score++;
       }
       break;
@@ -413,7 +414,7 @@ struct Statistique generer_stat(struct Statistique stat, struct Partie p)
   stat.nb_bonus += p.bonus_trouve;
   stat.nb_partie++;
   
-  p.stat == DEFAITE  ? stat.nb_defaite++ : stat.nb_victoire++;
+  p.stat == DEFAITE ? stat.nb_defaite++ : stat.nb_victoire++;
 
   return stat;
 }
